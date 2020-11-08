@@ -1,0 +1,3 @@
+install WinAVR:
+	1, enables avrdude
+	2, enalbes makefiles and make command
