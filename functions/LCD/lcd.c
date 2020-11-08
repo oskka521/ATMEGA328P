@@ -43,7 +43,7 @@ void LCD_Init(void)
     LCD_Command(0x0c); /* Display on cursor off*/
     LCD_Command(0x06); /* Increment cursor (shift cursor to right)*/
     LCD_Command(0x01); /* Clear display screen*/
-    _delay_ms(2);
+    _delay_ms(20);
     //LCD_Command(0x80); /* Cursor 1st row 0th position */
 }
 
@@ -70,6 +70,7 @@ void LCD_Clear()
     LCD_Command(0x01); /* Clear display */
     _delay_ms(2);
     LCD_Command(0x80); /* Cursor at home position */
+    _delay_ms(20);
 }
 
 void upload_data_lcd(unsigned char data, int upper)

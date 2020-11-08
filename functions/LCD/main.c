@@ -1,3 +1,5 @@
+#define F_CPU 16000000UL
+
 #include "lcd.h"
 #include <util/delay.h>
 #include <avr/io.h>
@@ -5,17 +7,28 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define F_CPU 16000000UL
+
 
 int main(void){
 
     LCD_Init(); /* Initialization of LCD*/
-    LCD_Clear();
-    _delay_ms(20);      
+    LCD_Clear(); 
     LCD_String("WORK?");
     LCD_Command(0xC0); /* Go to 2nd line*/
     LCD_String("OSKAR ");
+   
+    _delay_ms(500);
+    int counter = 0;
+    char counter_string[4];
     while(1){
-        
+        _delay_ms(500);
+        LCD_Clear();
+        LCD_String("OSKAR ");
+        LCD_Command(0xC0);
+        itoa(counter, counter_string, 10);
+        LCD_String(counter_string);
+        LCD_String(" h");
+        counter ++;
+
     }
 }
