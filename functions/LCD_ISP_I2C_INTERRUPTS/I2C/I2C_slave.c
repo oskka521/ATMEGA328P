@@ -4,7 +4,7 @@
 void I2C_Slave_Init(uint8_t slave_address)
 {
     TWAR = slave_address;
-    TWCR = (1 << TWEN) | (1 << TWEA) | (1 << TWINT);
+    TWCR = (1 << TWEN) | (1 << TWEA) | (1 << TWINT) | (1 << TWIE);
 }
 
 int8_t I2C_Slave_Listen()

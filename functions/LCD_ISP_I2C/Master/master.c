@@ -10,43 +10,79 @@
 
 #define Slave_Write_Address 0x20
 #define Slave_Read_Address 0x21
-#define count 10
+#define MESSAGE_LENGTH 100
+
+void send_message(char *message, int length);
+void recive_message(char *message);
 
 int main(void)
 {
-    char buffer[10];
+    char message[MESSAGE_LENGTH] = "HELLO";
+    char *mess = message;
 
-    LCD_Init(); /* Initialize LCD */
-    I2C_Init(); /* Initialize I2C */
+    char received[MESSAGE_LENGTH];
+
+    LCD_Init();
+    I2C_Init();
 
     LCD_String_xy(0, 0, "Master Device");
 
+    int num = 10;
+    char snum[3];
+
     while (1)
     {
-        LCD_String_xy(1, 0, "Send:       ");
-        I2C_Start_Wait(Slave_Write_Address); /* Start I2C with SLA+W */
-        _delay_ms(5);
-        uint8_t i;
-        for (i = 0; i < count; i++)
-        {
-            sprintf(buffer, "%d    ", i);
-            LCD_String_xy(1, 6, buffer);
-            I2C_Write(i); /* Send Incrementing count */
-            _delay_ms(500);
-        }
-        LCD_String_xy(1, 0, "Rec:       ");
-        I2C_Repeated_Start(Slave_Read_Address); /* Repeated Start with SLA+R */
-        _delay_ms(5);
-        for (i = 0; i < count; i++)
-        {
-            if (i < count - 1)
-                sprintf(buffer, "%d    ", I2C_Read_Ack()); /* Read & Ack of data */
-            else
-                sprintf(buffer, "%d    ", I2C_Read_Nack()); /* Read & Nack to data */
-            LCD_String_xy(1, 6, buffer);
-            _delay_ms(500);
-        }
+        char message[MESSAGE_LENGTH] = "HELLO";
+        char *mess = message;
+        itoa(num, snum, 10);
+        num++;
+        strcat(mess, snum);
+
+        LCD_String_xy(1, 0, "                       ");
+        LCD_String_xy(1, 0, "S:");
+        send_message(mess, strlen(mess));
+        LCD_String_xy(1, 2, mess);
+        _delay_ms(5000);
+
+        LCD_String_xy(1, 0, "                       ");
+        LCD_String_xy(1, 0, "R:");
+        recive_message(received);
+        LCD_String_xy(1, 2, received);
+
+        _delay_ms(5000);
+
         I2C_Stop(); /* Stop I2C */
-    }               /* Stop I2C */
+    }
     return 0;
+}
+
+void send_message(char *message, int length)
+{
+    I2C_Start_Wait(Slave_Write_Address);
+    _delay_ms(5);
+    int i;
+    for (i = 0; i < length; i++)
+    {
+        I2C_Write(message[i]);
+        _delay_ms(5);
+    }
+    I2C_Stop();
+    _delay_ms(5);
+}
+
+void recive_message(char *message)
+{
+    I2C_Start(Slave_Write_Address);
+    I2C_Write(0x00);
+    I2C_Repeated_Start(Slave_Read_Address);
+    int i;
+    char temp;
+    for (i = 0; i < MESSAGE_LENGTH; i++)
+    {
+        if (i < MESSAGE_LENGTH - 1)
+            temp = I2C_Read_Ack();
+        else
+            temp = I2C_Read_Nack();
+        message[i] = temp;
+    }
 }
