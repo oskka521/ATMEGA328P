@@ -1,3 +1,11 @@
-install WinAVR:
+**install WinAVR:
 	1, enables avrdude
 	2, enalbes makefiles and make command
+
+
+**This is for enabeling Atmel AT AVRISP mkii XPII AVR ISP mk2 USB AVRISP**
+-> install zadig. a driver installer.
+-> install libusb-win32
+-> use usb as PORT (-P)
+-> use avrispmkII as PROGRAMMER (-c)
+-> remove avrdude -D.
