@@ -7,14 +7,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "UART/uart_utility_functions.h"
 
-#define MESSAGE_LENGTH 100
+#define MESSAGE_LENGTH 8
 
 void concat_number_to_string(char *char_p, int number);
 
 int main(void)
 {
-
+    init_uart();
     char received[MESSAGE_LENGTH] = "";
     Set_Slave_Write_Address(0x20, 0x21);
     LCD_Init();
@@ -39,6 +40,7 @@ int main(void)
         LCD_String_xy(1, 0, "                       ");
         LCD_String_xy(1, 0, "R:");
         recive_message(received, MESSAGE_LENGTH);
+        printf("sent =  ");
         LCD_String_xy(1, 2, received);
 
         _delay_ms(5000);

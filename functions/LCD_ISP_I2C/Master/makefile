@@ -1,6 +1,7 @@
 FILENAME1   = master
 FILENAME2   = lcd
 FILENAME3   = I2C_master
+FILENAME4	= uart_utility_functions
 PORT       = COM4
 DEVICE     = atmega328p
 PROGRAMMER = arduino
@@ -12,9 +13,9 @@ COMPILE    = avr-gcc -Wall -mmcu=$(DEVICE) -std=c99 -Os -DF_CPU=$(CLOCK)
 default: compile upload clean
 
 
-compile: main.o lcd.o I2C_master.o
+compile: main.o lcd.o I2C_master.o uart_utility_functions.o
 	@echo "LINKING"
-	$(COMPILE) -o  $(FILENAME1).elf $(FILENAME1).o $(FILENAME2).o $(FILENAME3).o
+	$(COMPILE) -o  $(FILENAME1).elf $(FILENAME1).o $(FILENAME2).o $(FILENAME3).o $(FILENAME4).o
 	avr-objcopy -O ihex -j .text -j .data $(FILENAME1).elf $(FILENAME1).hex
 	avr-size --format=avr --mcu=$(DEVICE) $(FILENAME1).elf
 
@@ -30,6 +31,10 @@ I2C_master.o: I2C/$(FILENAME3).c I2C/$(FILENAME3).h
 	@echo "I2C MASTER"
 	$(COMPILE) -c I2C/$(FILENAME3).c
 
+uart_utility_functions.o: UART/$(FILENAME4).c UART/$(FILENAME4).h
+	@echo "UART"
+	$(COMPILE) -c UART/$(FILENAME4).c
+
 
 upload:
 	@echo "UPLOAD"
@@ -39,5 +44,6 @@ clean:
 	rm $(FILENAME1).o
 	rm $(FILENAME2).o
 	rm $(FILENAME3).o
+	rm $(FILENAME4).o
 	rm $(FILENAME1).hex
 	rm $(FILENAME1).elf

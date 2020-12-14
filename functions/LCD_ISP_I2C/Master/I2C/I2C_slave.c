@@ -97,10 +97,11 @@ void send_message(char *message, int length)
     {
         Ack_status = I2C_Slave_Transmit(message[i]); /* Send data byte */
         i++;
-        if (i == length)
+        /*
+        if (i > length)
         {
             printf("break\r\n");
             break;
-        }
+    */
     } while (Ack_status == 0);
 }
