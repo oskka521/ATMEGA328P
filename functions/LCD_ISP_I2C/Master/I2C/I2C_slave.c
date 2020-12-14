@@ -1,8 +1,8 @@
-
 #include "I2C_slave.h"
 
 void I2C_Slave_Init(uint8_t slave_address)
 {
+    init_uart();
     TWAR = slave_address;
     TWCR = (1 << TWEN) | (1 << TWEA) | (1 << TWINT);
 }
@@ -70,4 +70,37 @@ char I2C_Slave_Receive()
     }
     else
         return -2; /* Else return 1 */
+}
+
+void recive_message(char *received)
+{
+    int8_t data = 0;
+    int i = 0;
+    char temp;
+    while (data != -1)
+    {
+        data = I2C_Slave_Receive();
+        if (data != -1)
+        {
+            temp = (char)data;
+            received[i] = temp;
+            i++;
+        }
+    }
+}
+
+void send_message(char *message, int length)
+{
+    int8_t Ack_status;
+    int i = 0;
+    do
+    {
+        Ack_status = I2C_Slave_Transmit(message[i]); /* Send data byte */
+        i++;
+        if (i == length)
+        {
+            printf("break\r\n");
+            break;
+        }
+    } while (Ack_status == 0);
 }

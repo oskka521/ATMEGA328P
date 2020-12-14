@@ -7,19 +7,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "UART/uart_utility_functions.h"
 #define Slave_Address 0x20
 #define MESSAGE_LENGTH 100
 
-void send_message(char *message);
-void recive_message(char *message);
+//void send_message(char *message);
+//void recive_message(char *message);
 void listen_I2C();
 
 int main(void)
 {
-    char message[MESSAGE_LENGTH] = "WORLD";
+
+    char message[MESSAGE_LENGTH] = "SLAVE";
     char received[MESSAGE_LENGTH] = {'0'};
 
+    init_uart();
     LCD_Init();
     I2C_Slave_Init(Slave_Address);
 
@@ -27,6 +29,7 @@ int main(void)
 
     while (1)
     {
+        printf("System Booted, built %s on %s\r\n", __TIME__, __DATE__);
         listen_I2C(received, message);
     }
     return 0;
@@ -45,14 +48,14 @@ void listen_I2C(char *received, char *message)
     case 1:
         LCD_String_xy(1, 0, "                       ");
         LCD_String_xy(1, 0, "S:");
-        send_message(message);
+        send_message(message, 10);
         LCD_String_xy(1, 2, message);
         break;
     default:
         break;
     }
 }
-
+/*
 void recive_message(char *received)
 {
     int8_t data = 0;
@@ -76,8 +79,9 @@ void send_message(char *message)
     int i = 0;
     do
     {
-        Ack_status = I2C_Slave_Transmit(message[i]); /* Send data byte */
+        Ack_status = I2C_Slave_Transmit(message[i]); 
         i++;
 
     } while (Ack_status == 0);
 }
+*/

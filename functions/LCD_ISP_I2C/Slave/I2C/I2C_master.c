@@ -1,5 +1,8 @@
 #include "I2C_master.h"
 
+static uint8_t Slave_Write_Address = 0x00;
+static uint8_t Slave_Read_Address = 0x00;
+
 void I2C_Init() /* I2C initialize function */
 {
     TWBR = BITRATE(TWSR = 0x00); /* Get bit rate register value by formula */
@@ -111,4 +114,40 @@ char I2C_Read_Nack() /* I2C read nack function */
     while (!(TWCR & (1 << TWINT)))
         ;        /* Wait until TWI finish its current job (read operation) */
     return TWDR; /* Return received data */
+}
+void Set_Slave_Write_Address(uint8_t write_address, uint8_t read_address)
+{
+    Slave_Write_Address = write_address;
+    Slave_Read_Address = read_address;
+}
+
+void send_message(char *message, int length)
+{
+    I2C_Start_Wait(Slave_Write_Address);
+    _delay_ms(5);
+    int i;
+    for (i = 0; i < length; i++)
+    {
+        I2C_Write(message[i]);
+        _delay_ms(5);
+    }
+    I2C_Stop();
+    _delay_ms(5);
+}
+
+void recive_message(char *message, int length)
+{
+    I2C_Start(Slave_Write_Address);
+    I2C_Write(0x00);
+    I2C_Repeated_Start(Slave_Read_Address);
+    int i;
+    char temp;
+    for (i = 0; i < length; i++)
+    {
+        if (i < length - 1)
+            temp = I2C_Read_Ack();
+        else
+            temp = I2C_Read_Nack();
+        message[i] = temp;
+    }
 }

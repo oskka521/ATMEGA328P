@@ -15,3 +15,6 @@ void I2C_Start_Wait(char write_address);       /* I2C start wait function */
 uint8_t I2C_Write(char data);                  /* I2C write function */
 char I2C_Read_Ack();                           /* I2C read ack function */
 char I2C_Read_Nack();                          /* I2C read nack function */
+void Set_Slave_Write_Address(uint8_t write_address, uint8_t read_address);
+void send_message(char *message, int length);
+void recive_message(char *message, int length);

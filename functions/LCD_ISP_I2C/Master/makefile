@@ -1,14 +1,15 @@
 FILENAME1   = master
 FILENAME2   = lcd
 FILENAME3   = I2C_master
-PORT       = usb
+PORT       = COM4
 DEVICE     = atmega328p
-PROGRAMMER = avrispmkII
+PROGRAMMER = arduino
 BAUD       = 57600
-COMPILE    = avr-gcc -Wall -mmcu=$(DEVICE) -Os
+CLOCK      = 16000000UL
+COMPILE    = avr-gcc -Wall -mmcu=$(DEVICE) -std=c99 -Os -DF_CPU=$(CLOCK)
 
 
-default: compile upload
+default: compile upload clean
 
 
 compile: main.o lcd.o I2C_master.o

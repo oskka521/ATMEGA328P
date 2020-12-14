@@ -3,7 +3,8 @@ PORT       = COM4
 DEVICE     = atmega328p
 PROGRAMMER = arduino
 BAUD       = 57600
-COMPILE    = avr-gcc -Wall -mmcu=$(DEVICE)
+CLOCK      = 16000000
+COMPILE    = avr-gcc -Wall -mmcu=$(DEVICE) -std=c99 -Os -DF_CPU=$(CLOCK)
 
 
 default: compile upload clean
